@@ -1,4 +1,4 @@
-package edu.itsu.inscripciones.Modelo;
+package edu.itsu.inscripciones.modelo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

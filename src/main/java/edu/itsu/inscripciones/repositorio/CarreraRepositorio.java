@@ -1,8 +1,8 @@
-package edu.itsu.inscripciones.Repositorio;
+package edu.itsu.inscripciones.repositorio;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import edu.itsu.inscripciones.Modelo.Carrera;
+import edu.itsu.inscripciones.modelo.Carrera;
 
 public interface CarreraRepositorio extends JpaRepository <Carrera,Integer>{
 
