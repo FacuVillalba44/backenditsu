@@ -1,0 +1,57 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS (Spring Tool Suite) ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+*.code-workspace
+
+### Idx ###
+.idx/
+
+### Logs y datos temporales ###
+*.log
+logs/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+### Dependencias y binarios ###
+/node_modules/
+/lib/
+/bin/
+/target/
+/dist/
+
+### Archivos del sistema ###
+.DS_Store
+Thumbs.db
