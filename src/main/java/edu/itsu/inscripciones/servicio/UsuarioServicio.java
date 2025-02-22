@@ -9,6 +9,7 @@ import edu.itsu.inscripciones.modelo.InscripcionesCarreras;
 import edu.itsu.inscripciones.repositorio.UsuarioRepositorio;
 import edu.itsu.inscripciones.repositorio.CarreraRepositorio;
 import edu.itsu.inscripciones.servicio.IInscripcionesCarrerasServicio;
+import edu.itsu.inscripciones.servicio.IRolServicio;
 
 @SuppressWarnings("unused")
 @Service
@@ -19,6 +20,8 @@ public class UsuarioServicio implements IUsuarioServicio {
     private CarreraRepositorio carreraRepositorio;
     @Autowired
     private IInscripcionesCarrerasServicio inscripcionesCarrerasServicio;
+    @Autowired
+    private IRolServicio rolServicio;
 
     @Override
     public List<Usuario> listarUsuario() {
@@ -35,12 +38,14 @@ public class UsuarioServicio implements IUsuarioServicio {
         return this.usuarioRepositorio.save(usuario);
     }
 
-    // Nuevo método para manejar el JSON con idCarrera
     public Usuario guardarUsuarioConInscripcion(Usuario usuario, Integer idCarrera) {
-        // Guardar el usuario primero
+        // Validar que el idRol exista
+        if (usuario.getIdRol() != null) {
+            rolServicio.buscarRolPorId(usuario.getIdRol())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        }
         Usuario nuevoUsuario = this.usuarioRepositorio.save(usuario);
 
-        // Si viene idCarrera, crear la inscripción
         if (idCarrera != null) {
             Carrera carrera = carreraRepositorio.findById(idCarrera)
                 .orElseThrow(() -> new RuntimeException("Carrera no encontrada"));
