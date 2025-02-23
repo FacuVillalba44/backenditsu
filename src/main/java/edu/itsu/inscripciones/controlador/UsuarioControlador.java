@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.DeleteMapping; // Añadido
+import org.springframework.web.bind.annotation.PathVariable; // Añadido
 @SuppressWarnings("unused")
 @RestController
 
@@ -48,6 +49,11 @@ public class UsuarioControlador {
         // Asumimos que el JSON incluye "idCarrera" como campo extra
         Integer idCarrera = usuario.getIdCarrera(); // Temporalmente en Usuario.java
         return this.usuarioServicio.guardarUsuarioConInscripcion(usuario, idCarrera);
+    }
+    @DeleteMapping("/usuarios/{id}")
+    public void eliminarUsuario(@PathVariable Integer id) {
+        logger.info("Eliminando usuario con ID: " + id);
+        this.usuarioServicio.eliminarUsuario(id);
     }
 
 }
