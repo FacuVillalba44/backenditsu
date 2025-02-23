@@ -1,6 +1,8 @@
 package edu.itsu.inscripciones.servicio;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import edu.itsu.inscripciones.modelo.Carrera;
 import edu.itsu.inscripciones.modelo.InscripcionesCarreras;
 import edu.itsu.inscripciones.repositorio.UsuarioRepositorio;
 import edu.itsu.inscripciones.repositorio.CarreraRepositorio;
-import edu.itsu.inscripciones.servicio.IInscripcionesCarrerasServicio;
+import edu.itsu.inscripciones.repositorio.InscripcionesCarrerasRepositorio; // Asegúrate de tener este import
 import edu.itsu.inscripciones.servicio.IRolServicio;
 
 @SuppressWarnings("unused")
@@ -24,7 +26,7 @@ public class UsuarioServicio implements IUsuarioServicio {
     @Autowired
     private CarreraRepositorio carreraRepositorio;
     @Autowired
-    private IInscripcionesCarrerasServicio inscripcionesCarrerasServicio;
+    private InscripcionesCarrerasRepositorio inscripcionesCarrerasRepositorio; // Inyectado aquí
     @Autowired
     private IRolServicio rolServicio;
 
@@ -34,14 +36,26 @@ public class UsuarioServicio implements IUsuarioServicio {
     public List<Usuario> listarUsuario() {
         return this.usuarioRepositorio.findAll();
     }
+
     public List<Usuario> listarAlumnosPorRol(Integer idRol) {
         return this.usuarioRepositorio.findAll().stream()
             .filter(usuario -> usuario.getIdRol() != null && usuario.getIdRol().equals(idRol))
             .toList();
     }
+
     @Override
     public Usuario buscarUsuarioPorId(Integer id) {
-        return this.usuarioRepositorio.findById(id).orElse(null);
+        Usuario usuario = this.usuarioRepositorio.findById(id).orElse(null);
+        if (usuario != null) {
+            InscripcionesCarreras inscripcion = inscripcionesCarrerasRepositorio.findAll().stream()
+                .filter(i -> i.getUsuario().getIdUsuario().equals(id))
+                .findFirst()
+                .orElse(null);
+            if (inscripcion != null) {
+                usuario.setIdCarrera(inscripcion.getCarrera().getIdCarrera());
+            }
+        }
+        return usuario;
     }
 
     @Override
@@ -56,7 +70,6 @@ public class UsuarioServicio implements IUsuarioServicio {
             rolServicio.buscarRolPorId(usuario.getIdRol())
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
         }
-        // Encriptar la clave aquí
         usuario.setClaveAcceso(passwordEncoder.encode(usuario.getClaveAcceso()));
         Usuario nuevoUsuario = this.usuarioRepositorio.save(usuario);
         logger.info("Usuario guardado con ID: " + nuevoUsuario.getIdUsuario());
@@ -70,7 +83,7 @@ public class UsuarioServicio implements IUsuarioServicio {
             inscripcion.setUsuario(nuevoUsuario);
             inscripcion.setCarrera(carrera);
             logger.info("Guardando inscripción para usuario " + nuevoUsuario.getIdUsuario() + " y carrera " + idCarrera);
-            inscripcionesCarrerasServicio.guardarInscripcion(inscripcion);
+            inscripcionesCarrerasRepositorio.save(inscripcion); // Cambiado a repositorio
             logger.info("Inscripción guardada");
         }
 
@@ -78,7 +91,15 @@ public class UsuarioServicio implements IUsuarioServicio {
     }
 
     @Override
-    public void eliminarUsuario(Integer idUsuario) {
-        this.usuarioRepositorio.deleteById(idUsuario);
+public void eliminarUsuario(Integer idUsuario) {
+    // Primero eliminamos las inscripciones asociadas
+    List<InscripcionesCarreras> inscripciones = inscripcionesCarrerasRepositorio.findAll().stream()
+        .filter(i -> i.getUsuario().getIdUsuario().equals(idUsuario))
+        .collect(Collectors.toList());
+    for (InscripcionesCarreras inscripcion : inscripciones) {
+        inscripcionesCarrerasRepositorio.delete(inscripcion);
     }
+    // Luego eliminamos el usuario
+    this.usuarioRepositorio.deleteById(idUsuario);
+}
 }
