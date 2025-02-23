@@ -33,7 +33,7 @@ public class UsuarioControlador {
 
     // url donde se conectara es http://localhost:8080/api-itsu/usuarios
 
-    @GetMapping("/usuarios") //metodo para listar los usuarios
+    @GetMapping("/usuarios") // metodo para listar los usuarios
 
     public List<Usuario> obtenerUsuario() {
         List<Usuario> usuarios = this.usuarioServicio.listarUsuario();
@@ -42,16 +42,12 @@ public class UsuarioControlador {
         return usuarios;
     }
 
-
     @PostMapping("/usuarios")
-
-
-
-    public Usuario agregarUsuario(@RequestBody Usuario usuario){
-        logger.info("usuario a agregar:"+usuario);
-        return this.usuarioServicio.guardarUsuario(usuario);
-
+    public Usuario agregarUsuario(@RequestBody Usuario usuario) {
+        logger.info("Usuario a agregar: " + usuario);
+        // Asumimos que el JSON incluye "idCarrera" como campo extra
+        Integer idCarrera = usuario.getIdCarrera(); // Temporalmente en Usuario.java
+        return this.usuarioServicio.guardarUsuarioConInscripcion(usuario, idCarrera);
     }
-  
 
 }
