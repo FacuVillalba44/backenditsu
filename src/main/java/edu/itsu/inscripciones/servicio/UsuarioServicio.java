@@ -34,7 +34,11 @@ public class UsuarioServicio implements IUsuarioServicio {
     public List<Usuario> listarUsuario() {
         return this.usuarioRepositorio.findAll();
     }
-
+    public List<Usuario> listarAlumnosPorRol(Integer idRol) {
+        return this.usuarioRepositorio.findAll().stream()
+            .filter(usuario -> usuario.getIdRol() != null && usuario.getIdRol().equals(idRol))
+            .toList();
+    }
     @Override
     public Usuario buscarUsuarioPorId(Integer id) {
         return this.usuarioRepositorio.findById(id).orElse(null);
