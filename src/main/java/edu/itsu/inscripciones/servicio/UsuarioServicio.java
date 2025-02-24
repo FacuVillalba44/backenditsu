@@ -42,7 +42,12 @@ public class UsuarioServicio implements IUsuarioServicio {
             .filter(usuario -> usuario.getIdRol() != null && usuario.getIdRol().equals(idRol))
             .toList();
     }
-
+    public Usuario buscarUsuarioPorEmail(String email) {
+        return this.usuarioRepositorio.findAll().stream()
+            .filter(u -> u.getEmailUsuario().equals(email))
+            .findFirst()
+            .orElse(null);
+    }
     @Override
     public Usuario buscarUsuarioPorId(Integer id) {
         Usuario usuario = this.usuarioRepositorio.findById(id).orElse(null);
