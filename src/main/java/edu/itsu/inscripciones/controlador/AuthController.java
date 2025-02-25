@@ -32,6 +32,7 @@ public class AuthController {
             // Crear token JWT
             String token = Jwts.builder()
                 .setSubject(usuario.getEmailUsuario())
+                .claim("idRol", usuario.getIdRol())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 24 horas
                 .signWith(SignatureAlgorithm.HS512, "secretKey") // Clave secreta (cámbiala por una segura)
