@@ -2,11 +2,11 @@ package edu.itsu.inscripciones.servicio;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;//se usa para encriptar la contraseña antes de guardarla en la base de datos
 import org.springframework.stereotype.Service;
 import edu.itsu.inscripciones.modelo.Usuario;
 import edu.itsu.inscripciones.modelo.Carrera;
@@ -39,23 +39,25 @@ public class UsuarioServicio implements IUsuarioServicio {
 
     public List<Usuario> listarAlumnosPorRol(Integer idRol) {
         return this.usuarioRepositorio.findAll().stream()
-            .filter(usuario -> usuario.getIdRol() != null && usuario.getIdRol().equals(idRol))
-            .toList();
+                .filter(usuario -> usuario.getIdRol() != null && usuario.getIdRol().equals(idRol))
+                .toList();
     }
+
     public Usuario buscarUsuarioPorEmail(String email) {
         return this.usuarioRepositorio.findAll().stream()
-            .filter(u -> u.getEmailUsuario().equals(email))
-            .findFirst()
-            .orElse(null);
+                .filter(u -> u.getEmailUsuario().equals(email))
+                .findFirst()
+                .orElse(null);
     }
+
     @Override
     public Usuario buscarUsuarioPorId(Integer id) {
         Usuario usuario = this.usuarioRepositorio.findById(id).orElse(null);
         if (usuario != null) {
             InscripcionesCarreras inscripcion = inscripcionesCarrerasRepositorio.findAll().stream()
-                .filter(i -> i.getUsuario().getIdUsuario().equals(id))
-                .findFirst()
-                .orElse(null);
+                    .filter(i -> i.getUsuario().getIdUsuario().equals(id))
+                    .findFirst()
+                    .orElse(null);
             if (inscripcion != null) {
                 usuario.setIdCarrera(inscripcion.getCarrera().getIdCarrera());
             }
@@ -73,7 +75,7 @@ public class UsuarioServicio implements IUsuarioServicio {
         if (usuario.getIdRol() != null) {
             logger.info("Validando rol: " + usuario.getIdRol());
             rolServicio.buscarRolPorId(usuario.getIdRol())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                    .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
         }
         usuario.setClaveAcceso(passwordEncoder.encode(usuario.getClaveAcceso()));
         Usuario nuevoUsuario = this.usuarioRepositorio.save(usuario);
@@ -82,13 +84,14 @@ public class UsuarioServicio implements IUsuarioServicio {
         if (idCarrera != null) {
             logger.info("Buscando carrera con ID: " + idCarrera);
             Carrera carrera = carreraRepositorio.findById(idCarrera)
-                .orElseThrow(() -> new RuntimeException("Carrera no encontrada"));
+                    .orElseThrow(() -> new RuntimeException("Carrera no encontrada"));
             logger.info("Carrera encontrada: " + carrera.getNombreCarrera());
             InscripcionesCarreras inscripcion = new InscripcionesCarreras();
             inscripcion.setUsuario(nuevoUsuario);
             inscripcion.setCarrera(carrera);
-            inscripcion.setFechaInscripcion(usuario.getFechaInscripcion());//aqui guarda la fecha en inscripciones
-            logger.info("Guardando inscripción para usuario " + nuevoUsuario.getIdUsuario() + " y carrera " + idCarrera);
+            inscripcion.setFechaInscripcion(usuario.getFechaInscripcion());// aqui guarda la fecha en inscripciones
+            logger.info(
+                    "Guardando inscripción para usuario " + nuevoUsuario.getIdUsuario() + " y carrera " + idCarrera);
             inscripcionesCarrerasRepositorio.save(inscripcion); // Cambiado a repositorio
             logger.info("Inscripción guardada");
         }
@@ -97,15 +100,15 @@ public class UsuarioServicio implements IUsuarioServicio {
     }
 
     @Override
-public void eliminarUsuario(Integer idUsuario) {
-    // Primero eliminamos las inscripciones asociadas
-    List<InscripcionesCarreras> inscripciones = inscripcionesCarrerasRepositorio.findAll().stream()
-        .filter(i -> i.getUsuario().getIdUsuario().equals(idUsuario))
-        .collect(Collectors.toList());
-    for (InscripcionesCarreras inscripcion : inscripciones) {
-        inscripcionesCarrerasRepositorio.delete(inscripcion);
+    public void eliminarUsuario(Integer idUsuario) {
+        // Primero eliminamos las inscripciones asociadas
+        List<InscripcionesCarreras> inscripciones = inscripcionesCarrerasRepositorio.findAll().stream()
+                .filter(i -> i.getUsuario().getIdUsuario().equals(idUsuario))
+                .collect(Collectors.toList());
+        for (InscripcionesCarreras inscripcion : inscripciones) {
+            inscripcionesCarrerasRepositorio.delete(inscripcion);
+        }
+        // Luego eliminamos el usuario
+        this.usuarioRepositorio.deleteById(idUsuario);
     }
-    // Luego eliminamos el usuario
-    this.usuarioRepositorio.deleteById(idUsuario);
-}
 }

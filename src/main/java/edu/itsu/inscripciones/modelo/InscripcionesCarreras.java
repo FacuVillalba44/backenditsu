@@ -1,6 +1,8 @@
 package edu.itsu.inscripciones.modelo;
 
-import java.util.Date;
+
+
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,5 +31,5 @@ public class InscripcionesCarreras {
     @JoinColumn(name = "id_carrera")
     private Carrera carrera;
 
-    private Date fechaInscripcion;//agregue esto
+    private LocalDate fechaInscripcion;//agregue esto
 }
