@@ -87,6 +87,7 @@ public class UsuarioServicio implements IUsuarioServicio {
             InscripcionesCarreras inscripcion = new InscripcionesCarreras();
             inscripcion.setUsuario(nuevoUsuario);
             inscripcion.setCarrera(carrera);
+            inscripcion.setFechaInscripcion(usuario.getFechaInscripcion());//aqui guarda la fecha en inscripciones
             logger.info("Guardando inscripción para usuario " + nuevoUsuario.getIdUsuario() + " y carrera " + idCarrera);
             inscripcionesCarrerasRepositorio.save(inscripcion); // Cambiado a repositorio
             logger.info("Inscripción guardada");

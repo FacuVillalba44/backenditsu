@@ -1,5 +1,7 @@
 package edu.itsu.inscripciones.modelo;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,4 +31,6 @@ public class Usuario {
     String claveAcceso;
     @Transient // No se guarda en la tabla
     private Integer idCarrera; // Para recibir del JSON
+    @Transient // No se guarda en la tabla
+    private Date fechaInscripcion; // agregue esto
 }

@@ -1,5 +1,7 @@
 package edu.itsu.inscripciones.modelo;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,4 +28,6 @@ public class InscripcionesCarreras {
     @ManyToOne
     @JoinColumn(name = "id_carrera")
     private Carrera carrera;
+
+    private Date fechaInscripcion;//agregue esto
 }
