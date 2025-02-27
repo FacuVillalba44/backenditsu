@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
+import java.time.LocalDate;
 @Entity
 @Data
 @NoArgsConstructor
@@ -18,9 +18,11 @@ import lombok.ToString;
 public class Carrera {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer idCarrera;
-    String nombreCarrera;
-    String duracionCarrera;
-    String descripcionCarrera;
-    String resolucionCarrera;
+    private Integer idCarrera;
+
+    private String nombreCarrera;
+
+    private Integer idPlanDeEstudio; // Renombrado de resolucionCarrera
+
+    private LocalDate inicioDeDictado; // Añadido para fecha de inicio
 }

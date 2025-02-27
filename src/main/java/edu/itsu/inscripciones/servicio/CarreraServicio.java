@@ -5,6 +5,8 @@ import edu.itsu.inscripciones.modelo.Carrera;
 import edu.itsu.inscripciones.repositorio.CarreraRepositorio;
 
 import java.util.List;
+import java.util.Optional;
+
 
  
 @Service
@@ -19,9 +21,8 @@ public class CarreraServicio implements ICarreraServicio{
     }
 
     @Override
-    public Carrera buscarCarreraPorId(Integer id) {
-       Carrera carrera = this.carreraRepositorio.findById(id).orElse(null);
-        return carrera;
+    public Optional<Carrera> buscarCarreraPorId(Integer id) {
+        return carreraRepositorio.findById(id);
     }
 
     @Override

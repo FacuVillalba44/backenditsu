@@ -1,35 +1,32 @@
 package edu.itsu.inscripciones.modelo;
 
-
-
-import java.time.LocalDate;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InscripcionesCarreras {
+public class PlanDeEstudio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idInscripcion;
+    private Integer idPlanDeEstudio;
 
-    @ManyToOne
-    @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
+    private String codigoResolucion;
 
-    @ManyToOne
-    @JoinColumn(name = "id_carrera")
-    private Carrera carrera;
+    private String nombre;
 
-    private LocalDate fechaInscripcion;//agregue esto
+    private String descripcion;
+
+    private String linkRecurso;
+
+    private LocalDate fechaEntradaEnVigencia; // Sugerido: Fecha de entrada en vigencia
+
+    private Integer duracionEnAnios; // Sugerido: Duración en años (1-4 típico)
 }
