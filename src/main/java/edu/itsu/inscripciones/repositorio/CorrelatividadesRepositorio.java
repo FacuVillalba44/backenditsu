@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CorrelatividadesRepositorio extends JpaRepository<Correlatividades, Integer> {
 
-    List<Correlatividades> findByMateria(Materias catedra);
+    List<Correlatividades> findByMateria(Materias materia);
     
 }

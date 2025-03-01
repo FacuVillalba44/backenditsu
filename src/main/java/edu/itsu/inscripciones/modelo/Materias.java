@@ -22,5 +22,7 @@ public class Materias {
 
     private Integer numeroDeMateria;
 
+    @Column(nullable = false)
     private Integer ciclo;
+
 }

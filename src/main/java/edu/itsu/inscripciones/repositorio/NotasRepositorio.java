@@ -8,6 +8,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
+@SuppressWarnings("unused")
 public interface NotasRepositorio extends JpaRepository<Notas, Integer> {
 
-    Optional<Notas> findByUsuarioAndMateria(Usuario usuario, Materias materiaCorrelativa);}
+    Optional<Notas> findByUsuarioIdUsuarioAndMateriaIdMateria(Integer idUsuario, Integer idMateria);
+
+    Optional<Notas> findByUsuarioIdUsuarioAndMateriaIdMateria(Integer idUsuario, Materias idMateria);}

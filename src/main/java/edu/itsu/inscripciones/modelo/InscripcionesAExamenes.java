@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -16,20 +16,24 @@ public class InscripcionesAExamenes {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "catedra", nullable = false)
-    private Materias catedra;
+    @JoinColumn(name = "id_llamado", nullable = false)
+    private LlamadosAMesa idLlamado; // Reemplaza idMateria y fechaDeExamen
 
-    private Integer curso;
+    private Integer ciclo;
 
     private Integer anioDeCursado;
 
     private String condicion;
 
-    private LocalDate fechaDeExamen;
-
-    private LocalDate fechaDeInscripcion;
+    private LocalDateTime fechaDeInscripcion;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+
+    @Column(columnDefinition = "VARCHAR(20) DEFAULT 'enviada'")
+    private String estado;
+
+    @Column(nullable = false)
+    private Integer llamado;
 }

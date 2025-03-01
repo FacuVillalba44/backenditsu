@@ -19,6 +19,6 @@ public class Correlatividades {
     private Materias materia;
 
     @ManyToOne
-    @JoinColumn(name = "id_Materia_correlativa", nullable = false)
+    @JoinColumn(name = "id_materia_correlativa", nullable = false)
     private Materias materiaCorrelativa;
 }
