@@ -36,9 +36,9 @@ public class UsuarioControlador {
     }
 
     @GetMapping("/alumnos")
-    public List<Usuario> obtenerAlumnos() {
-        logger.info("Obteniendo la lista de alumnos (idRol=1)");
-        List<Usuario> alumnos = this.usuarioServicio.listarAlumnosPorRol(1);
+    public List<Usuario> obtenerAlumnosActivos() {
+        logger.info("Obteniendo la lista de alumnos activos (idRol=1, estado=activo)");
+        List<Usuario> alumnos = this.usuarioServicio.listarAlumnosActivos();
         alumnos.forEach(alumno -> logger.info(alumno.toString()));
         return alumnos;
     }
@@ -69,8 +69,8 @@ public class UsuarioControlador {
     }
 
     @DeleteMapping("/usuarios/{id}")
-    public void eliminarUsuario(@PathVariable Integer id) {
-        logger.info("Eliminando usuario con ID: " + id);
-        this.usuarioServicio.eliminarUsuario(id);
+    public void marcarComoInactivo(@PathVariable Integer id) {
+        logger.info("Marcando usuario como inactivo con ID: " + id);
+        this.usuarioServicio.marcarComoInactivo(id);
     }
 }

@@ -43,6 +43,10 @@ public class UsuarioServicio implements IUsuarioServicio {
                 .toList();
     }
 
+    public List<Usuario> listarAlumnosActivos() {
+        return usuarioRepositorio.findByIdRolAndEstado(1, "activo");
+    }
+
     public Usuario buscarUsuarioPorEmail(String email) {
         return this.usuarioRepositorio.findAll().stream()
                 .filter(u -> u.getEmailUsuario().equals(email))
@@ -72,15 +76,35 @@ public class UsuarioServicio implements IUsuarioServicio {
 
     public Usuario guardarUsuarioConInscripcion(Usuario usuario, Integer idCarrera) {
         logger.info("Guardando usuario: " + usuario);
-        if (usuario.getIdRol() != null) {
-            logger.info("Validando rol: " + usuario.getIdRol());
-            rolServicio.buscarRolPorId(usuario.getIdRol())
-                    .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        Usuario usuarioPersistido;
+    
+        if (usuario.getIdUsuario() != null) {
+            // Cargar usuario existente para preservar campos no enviados
+            usuarioPersistido = usuarioRepositorio.findById(usuario.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            
+            // Actualizar solo los campos enviados
+            if (usuario.getNombreUsuario() != null) usuarioPersistido.setNombreUsuario(usuario.getNombreUsuario());
+            if (usuario.getApellidoUsuario() != null) usuarioPersistido.setApellidoUsuario(usuario.getApellidoUsuario());
+            if (usuario.getDniUsuario() != null) usuarioPersistido.setDniUsuario(usuario.getDniUsuario());
+            if (usuario.getDomicilioUsuario() != null) usuarioPersistido.setDomicilioUsuario(usuario.getDomicilioUsuario());
+            if (usuario.getTelefonoUsuario() != null) usuarioPersistido.setTelefonoUsuario(usuario.getTelefonoUsuario());
+            if (usuario.getEmailUsuario() != null) usuarioPersistido.setEmailUsuario(usuario.getEmailUsuario());
+            usuarioPersistido.setIdRol(1); // Siempre alumno
+            // No tocamos claveAcceso ni estado, se preservan
+        } else {
+            // Nuevo usuario
+            usuario.setIdRol(1);
+            if (usuario.getClaveAcceso() != null && !usuario.getClaveAcceso().isEmpty()) {
+                usuario.setClaveAcceso(passwordEncoder.encode(usuario.getClaveAcceso()));
+            }
+            usuario.setEstado("activo"); // Aseguramos estado activo al crear
+            usuarioPersistido = usuario;
         }
-        usuario.setClaveAcceso(passwordEncoder.encode(usuario.getClaveAcceso()));
-        Usuario nuevoUsuario = this.usuarioRepositorio.save(usuario);
+    
+        Usuario nuevoUsuario = this.usuarioRepositorio.save(usuarioPersistido);
         logger.info("Usuario guardado con ID: " + nuevoUsuario.getIdUsuario());
-
+    
         if (idCarrera != null) {
             logger.info("Buscando carrera con ID: " + idCarrera);
             Carrera carrera = carreraRepositorio.findById(idCarrera)
@@ -89,16 +113,15 @@ public class UsuarioServicio implements IUsuarioServicio {
             InscripcionesCarreras inscripcion = new InscripcionesCarreras();
             inscripcion.setUsuario(nuevoUsuario);
             inscripcion.setCarrera(carrera);
-            inscripcion.setFechaInscripcion(usuario.getFechaInscripcion());// aqui guarda la fecha en inscripciones
-            logger.info(
-                    "Guardando inscripción para usuario " + nuevoUsuario.getIdUsuario() + " y carrera " + idCarrera);
-            inscripcionesCarrerasRepositorio.save(inscripcion); // Cambiado a repositorio
+            inscripcion.setFechaInscripcion(usuario.getFechaInscripcion());
+            logger.info("Guardando inscripción para usuario " + nuevoUsuario.getIdUsuario() + " y carrera " + idCarrera);
+            inscripcionesCarrerasRepositorio.save(inscripcion);
             logger.info("Inscripción guardada");
         }
-
+    
         return nuevoUsuario;
     }
-
+    /*------Metodo para borrar completamente el usuario
     @Override
     public void eliminarUsuario(Integer idUsuario) {
         // Primero eliminamos las inscripciones asociadas
@@ -110,5 +133,12 @@ public class UsuarioServicio implements IUsuarioServicio {
         }
         // Luego eliminamos el usuario
         this.usuarioRepositorio.deleteById(idUsuario);
+    }*/
+
+    public void marcarComoInactivo(Integer idUsuario) {
+        Usuario usuario = usuarioRepositorio.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuario.setEstado("inactivo");
+        usuarioRepositorio.save(usuario);
     }
 }
