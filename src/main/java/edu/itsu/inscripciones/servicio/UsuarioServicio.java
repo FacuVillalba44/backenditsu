@@ -76,10 +76,33 @@ public class UsuarioServicio implements IUsuarioServicio {
 
     public Usuario guardarUsuarioConInscripcion(Usuario usuario, Integer idCarrera) {
         logger.info("Guardando usuario: " + usuario);
-        usuario.setIdRol(1); // Asignamos rol de alumno automáticamente
-        usuario.setClaveAcceso(passwordEncoder.encode(usuario.getClaveAcceso()));
-        usuario.setEstado("activo"); // Estado activo
-        Usuario nuevoUsuario = this.usuarioRepositorio.save(usuario);
+        Usuario usuarioPersistido;
+    
+        if (usuario.getIdUsuario() != null) {
+            // Cargar usuario existente para preservar campos no enviados
+            usuarioPersistido = usuarioRepositorio.findById(usuario.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            
+            // Actualizar solo los campos enviados
+            if (usuario.getNombreUsuario() != null) usuarioPersistido.setNombreUsuario(usuario.getNombreUsuario());
+            if (usuario.getApellidoUsuario() != null) usuarioPersistido.setApellidoUsuario(usuario.getApellidoUsuario());
+            if (usuario.getDniUsuario() != null) usuarioPersistido.setDniUsuario(usuario.getDniUsuario());
+            if (usuario.getDomicilioUsuario() != null) usuarioPersistido.setDomicilioUsuario(usuario.getDomicilioUsuario());
+            if (usuario.getTelefonoUsuario() != null) usuarioPersistido.setTelefonoUsuario(usuario.getTelefonoUsuario());
+            if (usuario.getEmailUsuario() != null) usuarioPersistido.setEmailUsuario(usuario.getEmailUsuario());
+            usuarioPersistido.setIdRol(1); // Siempre alumno
+            // No tocamos claveAcceso ni estado, se preservan
+        } else {
+            // Nuevo usuario
+            usuario.setIdRol(1);
+            if (usuario.getClaveAcceso() != null && !usuario.getClaveAcceso().isEmpty()) {
+                usuario.setClaveAcceso(passwordEncoder.encode(usuario.getClaveAcceso()));
+            }
+            usuario.setEstado("activo"); // Aseguramos estado activo al crear
+            usuarioPersistido = usuario;
+        }
+    
+        Usuario nuevoUsuario = this.usuarioRepositorio.save(usuarioPersistido);
         logger.info("Usuario guardado con ID: " + nuevoUsuario.getIdUsuario());
     
         if (idCarrera != null) {
