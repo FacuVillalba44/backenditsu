@@ -13,4 +13,4 @@ public interface NotasRepositorio extends JpaRepository<Notas, Integer> {
 
     Optional<Notas> findByUsuarioIdUsuarioAndMateriaIdMateria(Integer idUsuario, Integer idMateria);
 
-    Optional<Notas> findByUsuarioIdUsuarioAndMateriaIdMateria(Integer idUsuario, Materias idMateria);}
+}

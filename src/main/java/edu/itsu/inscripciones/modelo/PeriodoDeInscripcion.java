@@ -2,7 +2,7 @@ package edu.itsu.inscripciones.modelo;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -12,8 +12,8 @@ public class PeriodoDeInscripcion {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate fechaInicio;
+    private LocalDateTime fechaInicio;
 
     @Column(nullable = false)
-    private LocalDate fechaFin;
+    private LocalDateTime fechaFin;
 }
