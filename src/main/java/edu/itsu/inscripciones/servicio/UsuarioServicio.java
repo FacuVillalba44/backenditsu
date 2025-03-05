@@ -13,7 +13,7 @@ import edu.itsu.inscripciones.modelo.Carrera;
 import edu.itsu.inscripciones.modelo.InscripcionesCarreras;
 import edu.itsu.inscripciones.repositorio.UsuarioRepositorio;
 import edu.itsu.inscripciones.repositorio.CarreraRepositorio;
-import edu.itsu.inscripciones.repositorio.InscripcionesCarrerasRepositorio; // Asegúrate de tener este import
+import edu.itsu.inscripciones.repositorio.InscripcionesCarrerasRepositorio; 
 import edu.itsu.inscripciones.servicio.IRolServicio;
 
 @SuppressWarnings("unused")
@@ -26,7 +26,7 @@ public class UsuarioServicio implements IUsuarioServicio {
     @Autowired
     private CarreraRepositorio carreraRepositorio;
     @Autowired
-    private InscripcionesCarrerasRepositorio inscripcionesCarrerasRepositorio; // Inyectado aquí
+    private InscripcionesCarrerasRepositorio inscripcionesCarrerasRepositorio;
     @Autowired
     private IRolServicio rolServicio;
 
@@ -79,26 +79,31 @@ public class UsuarioServicio implements IUsuarioServicio {
         Usuario usuarioPersistido;
     
         if (usuario.getIdUsuario() != null) {
-            // Cargar usuario existente para preservar campos no enviados
+            // Edición: Cargar usuario existente y preservar claveAcceso
             usuarioPersistido = usuarioRepositorio.findById(usuario.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-            
-            // Actualizar solo los campos enviados
             if (usuario.getNombreUsuario() != null) usuarioPersistido.setNombreUsuario(usuario.getNombreUsuario());
             if (usuario.getApellidoUsuario() != null) usuarioPersistido.setApellidoUsuario(usuario.getApellidoUsuario());
             if (usuario.getDniUsuario() != null) usuarioPersistido.setDniUsuario(usuario.getDniUsuario());
             if (usuario.getDomicilioUsuario() != null) usuarioPersistido.setDomicilioUsuario(usuario.getDomicilioUsuario());
             if (usuario.getTelefonoUsuario() != null) usuarioPersistido.setTelefonoUsuario(usuario.getTelefonoUsuario());
             if (usuario.getEmailUsuario() != null) usuarioPersistido.setEmailUsuario(usuario.getEmailUsuario());
-            usuarioPersistido.setIdRol(1); // Siempre alumno
-            // No tocamos claveAcceso ni estado, se preservan
+            usuarioPersistido.setIdRol(1);
+            // Solo actualizar claveAcceso si se envía explícitamente
+            if (usuario.getClaveAcceso() != null && !usuario.getClaveAcceso().isEmpty()) {
+                usuarioPersistido.setClaveAcceso(passwordEncoder.encode(usuario.getClaveAcceso()));
+            }
         } else {
-            // Nuevo usuario
+            // Creación: Usar dniUsuario como claveAcceso si no se envía
             usuario.setIdRol(1);
             if (usuario.getClaveAcceso() != null && !usuario.getClaveAcceso().isEmpty()) {
                 usuario.setClaveAcceso(passwordEncoder.encode(usuario.getClaveAcceso()));
+            } else if (usuario.getDniUsuario() != null && !usuario.getDniUsuario().isEmpty()) {
+                usuario.setClaveAcceso(passwordEncoder.encode(usuario.getDniUsuario()));
+            } else {
+                throw new IllegalArgumentException("Se requiere dniUsuario o claveAcceso para nuevos usuarios");
             }
-            usuario.setEstado("activo"); // Aseguramos estado activo al crear
+            usuario.setEstado("activo");
             usuarioPersistido = usuario;
         }
     
@@ -121,6 +126,18 @@ public class UsuarioServicio implements IUsuarioServicio {
     
         return nuevoUsuario;
     }
+/* descomentar solo para arreglar usuarios son clave
+    public void corregirUsuariosSinClave() {
+        List<Usuario> usuariosSinClave = usuarioRepositorio.findAllByClaveAccesoIsNullOrEmpty();
+        for (Usuario usuario : usuariosSinClave) {
+            if (usuario.getDniUsuario() != null && !usuario.getDniUsuario().isEmpty()) {
+                usuario.setClaveAcceso(passwordEncoder.encode(usuario.getDniUsuario()));
+                usuarioRepositorio.save(usuario);
+                logger.info("Clave corregida para usuario ID: " + usuario.getIdUsuario());
+            }
+        }
+    }*/
+    
     /*------Metodo para borrar completamente el usuario
     @Override
     public void eliminarUsuario(Integer idUsuario) {
