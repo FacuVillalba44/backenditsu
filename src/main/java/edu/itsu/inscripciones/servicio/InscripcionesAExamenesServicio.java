@@ -72,8 +72,8 @@ public class InscripcionesAExamenesServicio implements IInscripcionesAExamenesSe
         List<InscripcionesAExamenes> existentes = inscripcionesAExamenesRepositorio.findByUsuarioAndIdLlamadoIdMateria(
             inscripcion.getUsuario(), materia);
         int numInscripciones = existentes.size();
-        if (numInscripciones >= 2) {
-            throw new RuntimeException("Ya existen dos inscripciones para la materia " + materia.getNombre());
+        if (numInscripciones >= 1) {
+            throw new RuntimeException("Ya existen una inscripciones para la esta mesa para la materia " + materia.getNombre());
         }
         inscripcion.setLlamado(numInscripciones + 1);
 
