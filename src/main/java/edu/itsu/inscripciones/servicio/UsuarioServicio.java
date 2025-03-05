@@ -126,7 +126,7 @@ public class UsuarioServicio implements IUsuarioServicio {
     
         return nuevoUsuario;
     }
-/* descomentar solo para arreglar usuarios son clave
+
     public void corregirUsuariosSinClave() {
         List<Usuario> usuariosSinClave = usuarioRepositorio.findAllByClaveAccesoIsNullOrEmpty();
         for (Usuario usuario : usuariosSinClave) {
@@ -136,7 +136,7 @@ public class UsuarioServicio implements IUsuarioServicio {
                 logger.info("Clave corregida para usuario ID: " + usuario.getIdUsuario());
             }
         }
-    }*/
+    }
     
     /*------Metodo para borrar completamente el usuario
     @Override
