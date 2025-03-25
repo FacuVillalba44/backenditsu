@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.itsu.inscripciones.modelo.Carrera;
+import edu.itsu.inscripciones.modelo.PlanDeEstudio;
 import edu.itsu.inscripciones.servicio.CarreraServicio;
+import edu.itsu.inscripciones.servicio.PlanDeEstudioServicio;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 // context-path = http://localhost:8080/itsuapi/carrera <- se vería así el url
@@ -23,13 +27,15 @@ import edu.itsu.inscripciones.servicio.CarreraServicio;
 // api
 @RequestMapping("/itsuapi") // cambie el endpoint para que no quede redundante
 // Puerto desde donde recibira las peticiones del front
-@CrossOrigin(origins = "https://4200-idx-itsufront-1737645545390.cluster-vpxjqdstfzgs6qeiaf7rdlsqrc.cloudworkstations.dev")
+@CrossOrigin(origins = "https://4200-idx-webitsufrontgit-1741105155648.cluster-ve345ymguzcd6qqzuko2qbxtfe.cloudworkstations.dev")
 
 public class CarreraControlador {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CarreraControlador.class);
 
     @Autowired
     private CarreraServicio carreraServicio;
+    @Autowired
+    private PlanDeEstudioServicio planDeEstudioServicio;
 
     // url donde se conectara es http://localhost:8080/api-itsu/carreras
     @GetMapping("/carreras") // metodo para listar las carreras
@@ -43,8 +49,13 @@ public class CarreraControlador {
     @PostMapping("/carreras")
     public Carrera agregarCarrera(@RequestBody Carrera carrera) {
         logger.info("carrera a agregar:" + carrera);
+        if (carrera.getPlanDeEstudio() == null || carrera.getPlanDeEstudio().getIdPlanDeEstudio() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El ID del plan de estudio es obligatorio");
+        }
+        PlanDeEstudio planExistente = planDeEstudioServicio.buscarPlanDeEstudioPorId(carrera.getPlanDeEstudio().getIdPlanDeEstudio())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plan de estudio no encontrado"));
+        carrera.setPlanDeEstudio(planExistente);
         return this.carreraServicio.guardarCarrera(carrera);
-
     }
 
     @PutMapping("/carreras/{id}")
