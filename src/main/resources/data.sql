@@ -15,6 +15,34 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- Dumping data for table `rol`
+--
+
+LOCK TABLES `rol` WRITE;
+/*!40000 ALTER TABLE `rol` DISABLE KEYS */;
+INSERT INTO `rol` VALUES (1,'alumno'),(2,'administrador');
+/*!40000 ALTER TABLE `rol` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `plan_de_estudio`
+--
+
+LOCK TABLES `plan_de_estudio` WRITE;
+/*!40000 ALTER TABLE `plan_de_estudio` DISABLE KEYS */;
+INSERT INTO `plan_de_estudio` VALUES (1,'RES-2025-001','Profesorado de ingles',4,'2025-01-01','https://example.com/plan2024','Plan 2025-2028'),(2,'RES-408','Enfermeria',4,'2025-03-06','ejemplo.com','tecnicatura en enfermeria'),(3,'RES-406','literatura',4,'2025-03-03','ejemplolit.com','profesorado de letras');
+/*!40000 ALTER TABLE `plan_de_estudio` ENABLE KEYS */;
+UNLOCK TABLES;
+--
+-- Dumping data for table `usuario`
+--
+
+LOCK TABLES `usuario` WRITE;
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (1,'admin','$2a$12$vdHkCg7MgQLWy8wItITeAu5JA8LEz5FYhG2YuDAGYPCSRQeZbuUWK','12345678','casa de admin','admin2@mail.com','activo',2,'administrador','+543443567890'),(2,'estudiante','$2a$10$tl.GSMUqt/Akhfj/UZQXUO6VHP14okAsFgBQVoRzteqGRCpYU9rdK','87654321','Calle lluviosa 123','estudiante@mail.com','inactivo',1,'alumno','+543445447890'),(3,'Silva','$2a$10$mafjIcGkxQBBiNoyk7F21em3QlQoHQHHrpb73P50vSDJ9E0pSMviS','12345678','Luis palma s/n sauce de luna','gabita@example.com','inactivo',1,'Maria ','+543438441590'),(4,'Sanchez','$2a$10$Mf323Q4MMwIzjXsvNIBv9O1BTR2AvexPtVQHdRwPMpnXXobcYRid2','87654321','Calle lluviosa 123','gabi@example.com','activo',1,'Gabriela Victoria','+543445447890'),(5,'Petro','$2a$10$SDdqvQ3nJcP2Hk0hRKv4..q7LHDb0eGAw6AG42D9rfhT5QsA.8Csi','87654321','Urdinarrain','juan@mail.com','activo',1,'Juan Matias','+543445447890'),(6,'Villalbas','$2a$10$gbnwZLuULe7nKqVcX8cZbuh4SjBMNno23RWCX1GDCsjq2ydDGj9Aq','87654321','Calle lluviosa 123','ema@mail.com','activo',1,'Facu','+543445447890'),(7,'caraballo','$2a$10$/Lqv6OgqMZzJn1TFoeO39OYmX6VUn5yPqC38/4QJNPoUv6I7MzkGu','70090425','magnasco 409','berenice@example.com','inactivo',1,'berenice','+543445447890'),(8,'caraballo','$2a$10$Kut33B.HAEs9p.ZYNKzQHOXLuYWPPQN2EOoOEW.iF8cH2TX.DCXxy','70090425','magnasco 409','bere@example.com','inactivo',1,'berenice','+543445447890'),(9,'caraballo','$2a$10$G6dLNzwkdeL.lFvSvM7yPeNrl53tPDp7IwvHelMFeRovFPhwh2dCu','70090425','magnasco 409','berenice@example.com','activo',1,'berenice','+543445447890'),(10,'brelis','$2a$10$nsNpFHfmUTxzDkBOOj8KlO4CsmCY2SSpZjOtuq/sytJeIIBOCMDji','70090425','magnasco 409','bere@example.com','activo',1,'martin','+543445447890');
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Dumping data for table `carrera`
 --
@@ -89,35 +117,7 @@ LOCK TABLES `periodo_de_inscripcion` WRITE;
 /*!40000 ALTER TABLE `periodo_de_inscripcion` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Dumping data for table `plan_de_estudio`
---
 
-LOCK TABLES `plan_de_estudio` WRITE;
-/*!40000 ALTER TABLE `plan_de_estudio` DISABLE KEYS */;
-INSERT INTO `plan_de_estudio` VALUES (1,'RES-2025-001','Profesorado de ingles',4,'2025-01-01','https://example.com/plan2024','Plan 2025-2028'),(2,'RES-408','Enfermeria',4,'2025-03-06','ejemplo.com','tecnicatura en enfermeria'),(3,'RES-406','literatura',4,'2025-03-03','ejemplolit.com','profesorado de letras');
-/*!40000 ALTER TABLE `plan_de_estudio` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `rol`
---
-
-LOCK TABLES `rol` WRITE;
-/*!40000 ALTER TABLE `rol` DISABLE KEYS */;
-INSERT INTO `rol` VALUES (1,'alumno'),(2,'administrador');
-/*!40000 ALTER TABLE `rol` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `usuario`
---
-
-LOCK TABLES `usuario` WRITE;
-/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'admin','$2a$12$vdHkCg7MgQLWy8wItITeAu5JA8LEz5FYhG2YuDAGYPCSRQeZbuUWK','12345678','casa de admin','admin2@mail.com','activo',2,'administrador','+543443567890'),(2,'estudiante','$2a$10$tl.GSMUqt/Akhfj/UZQXUO6VHP14okAsFgBQVoRzteqGRCpYU9rdK','87654321','Calle lluviosa 123','estudiante@mail.com','inactivo',1,'alumno','+543445447890'),(3,'Silva','$2a$10$mafjIcGkxQBBiNoyk7F21em3QlQoHQHHrpb73P50vSDJ9E0pSMviS','12345678','Luis palma s/n sauce de luna','gabita@example.com','inactivo',1,'Maria ','+543438441590'),(4,'Sanchez','$2a$10$Mf323Q4MMwIzjXsvNIBv9O1BTR2AvexPtVQHdRwPMpnXXobcYRid2','87654321','Calle lluviosa 123','gabi@example.com','activo',1,'Gabriela Victoria','+543445447890'),(5,'Petro','$2a$10$SDdqvQ3nJcP2Hk0hRKv4..q7LHDb0eGAw6AG42D9rfhT5QsA.8Csi','87654321','Urdinarrain','juan@mail.com','activo',1,'Juan Matias','+543445447890'),(6,'Villalbas','$2a$10$gbnwZLuULe7nKqVcX8cZbuh4SjBMNno23RWCX1GDCsjq2ydDGj9Aq','87654321','Calle lluviosa 123','ema@mail.com','activo',1,'Facu','+543445447890'),(7,'caraballo','$2a$10$/Lqv6OgqMZzJn1TFoeO39OYmX6VUn5yPqC38/4QJNPoUv6I7MzkGu','70090425','magnasco 409','berenice@example.com','inactivo',1,'berenice','+543445447890'),(8,'caraballo','$2a$10$Kut33B.HAEs9p.ZYNKzQHOXLuYWPPQN2EOoOEW.iF8cH2TX.DCXxy','70090425','magnasco 409','bere@example.com','inactivo',1,'berenice','+543445447890'),(9,'caraballo','$2a$10$G6dLNzwkdeL.lFvSvM7yPeNrl53tPDp7IwvHelMFeRovFPhwh2dCu','70090425','magnasco 409','berenice@example.com','activo',1,'berenice','+543445447890'),(10,'brelis','$2a$10$nsNpFHfmUTxzDkBOOj8KlO4CsmCY2SSpZjOtuq/sytJeIIBOCMDji','70090425','magnasco 409','bere@example.com','activo',1,'martin','+543445447890');
-/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -128,4 +128,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-25 14:06:55
+-- Dump completed on 2025-03-25 14:39:59
