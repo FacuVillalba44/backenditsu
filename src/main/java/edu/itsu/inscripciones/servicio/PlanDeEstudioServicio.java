@@ -21,7 +21,7 @@ public class PlanDeEstudioServicio implements IPlanDeEstudioServicio {
         return repositorio.save(plan);
     }
 
-    public Optional<PlanDeEstudio> buscarPorId(Integer id) {
+    public Optional<PlanDeEstudio> buscarPlanDeEstudioPorId(Integer id) {  // Renombrado para consistencia con el controlador
         return repositorio.findById(id);
     }
 
